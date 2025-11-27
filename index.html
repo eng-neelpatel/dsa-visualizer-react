@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSA Master Visualizer - React</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .container {
+      background: white;
+      border-radius: 15px;
+      padding: 40px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+    
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 2.5em;
+    }
+    
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 1.1em;
+    }
+    
+    .info-box {
+      background: #f0f4ff;
+      border-left: 4px solid #667eea;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      text-align: left;
+    }
+    
+    .info-box h3 {
+      color: #667eea;
+      margin-bottom: 10px;
+    }
+    
+    .info-box p {
+      color: #555;
+      line-height: 1.6;
+    }
+    
+    .button {
+      display: inline-block;
+      padding: 15px 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      margin: 20px 10px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      border: none;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    
+    .button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    .secondary {
+      background: #f5f5f5;
+      color: #333;
+      border: 2px solid #ddd;
+    }
+    
+    .secondary:hover {
+      background: #efefef;
+      border-color: #667eea;
+    }
+    
+    .features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin: 30px 0;
+      text-align: left;
+    }
+    
+    .feature {
+      padding: 15px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      border-left: 3px solid #667eea;
+    }
+    
+    .feature h4 {
+      color: #667eea;
+      margin-bottom: 5px;
+    }
+    
+    .feature p {
+      color: #777;
+      font-size: 0.9em;
+    }
+    
+    .repo-link {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    .repo-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎯 DSA Master Visualizer</h1>
+    <p class="subtitle">Interactive React Component for Algorithm Visualization</p>
+    
+    <div class="info-box">
+      <h3>📋 Setup Required</h3>
+      <p>
+        This React application needs to be built locally to run. Follow the setup instructions in the repository to get started.
+      </p>
+    </div>
+    
+    <div class="features">
+      <div class="feature">
+        <h4>✅ CRUD Operations</h4>
+        <p>Create, edit, and delete visualizations</p>
+      </div>
+      <div class="feature">
+        <h4>⚡ Step Execution</h4>
+        <p>Animate algorithms step-by-step</p>
+      </div>
+      <div class="feature">
+        <h4>📊 Visualizations</h4>
+        <p>Arrays, linked lists, and more</p>
+      </div>
+      <div class="feature">
+        <h4>🎨 Professional UI</h4>
+        <p>Built with Tailwind CSS</p>
+      </div>
+    </div>
+    
+    <button onclick="window.location.href='https://github.com/eng-neelpatel/dsa-visualizer-react'" class="button">📂 View Repository</button>
+    
+    <button onclick="window.location.href='https://github.com/eng-neelpatel/dsa-visualizer-react/blob/main/INSTALL-AND-SETUP.md'" class="button secondary">📖 Read Setup Guide</button>
+    
+    <div class="info-box" style="margin-top: 30px; border-left-color: #764ba2;">
+      <h3>🚀 Quick Start</h3>
+      <p>
+        Clone the repository, follow the <a href="https://github.com/eng-neelpatel/dsa-visualizer-react/blob/main/INSTALL-AND-SETUP.md" class="repo-link">INSTALL-AND-SETUP.md</a> guide, and deploy to GitHub Pages with:
+      </p>
+      <p style="margin-top: 10px; font-family: monospace; background: #f5f5f5; padding: 10px; border-radius: 5px;">
+        npm run deploy
+      </p>
+    </div>
+    
+    <p style="color: #999; margin-top: 30px; font-size: 0.9em;">
+      Created with ❤️ for the developer community | 
+      <a href="https://github.com/eng-neelpatel" class="repo-link">@eng-neelpatel</a>
+    </p>
+  </div>
+</body>
+</html>
