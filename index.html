@@ -1,175 +1,187 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DSA Master Visualizer</title>
-  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/react.min.js"></script>
-  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/react-dom.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>body{margin:0;padding:0;font-family:sans-serif}</style>
+  <style>
+    body { margin: 0; padding: 0; }
+    .bar { transition: all 0.3s ease; }
+  </style>
 </head>
 <body>
-  <div id="root"></div>
-  <script type="text/babel">
-    const { useState, useEffect } = React;
-    
-    function App() {
-      const topics = [
-        {
-          id: 1,
-          title: 'Bubble Sort',
-          description: 'Array: [5, 1, 4, 2, 8]',
-          steps: [
-            { action: 'Start', explanation: 'Initial array', data: [5, 1, 4, 2, 8] },
-            { action: 'Swap 5 & 1', explanation: 'Compare and swap', data: [1, 5, 4, 2, 8] },
-            { action: 'Swap 5 & 4', explanation: 'Continue comparison', data: [1, 4, 5, 2, 8] },
-            { action: 'Swap 5 & 2', explanation: 'Continue swapping', data: [1, 4, 2, 5, 8] },
-            { action: 'No Swap 5 & 8', explanation: 'Already ordered', data: [1, 4, 2, 5, 8] },
-            { action: 'Pass 2: Swap 4 & 2', explanation: 'Second pass', data: [1, 2, 4, 5, 8] },
-            { action: 'Complete', explanation: 'Array is sorted', data: [1, 2, 4, 5, 8] }
-          ]
-        },
-        {
-          id: 2,
-          title: 'Linked List Traversal',
-          description: 'A -> B -> C -> D',
-          steps: [
-            { action: 'Start at Head', explanation: 'Begin traversal', data: 'A -> B -> C -> D' },
-            { action: 'Visit A', explanation: 'Current node is A', data: '[A] -> B -> C -> D' },
-            { action: 'Move to B', explanation: 'Follow pointer', data: 'A -> [B] -> C -> D' },
-            { action: 'Move to C', explanation: 'Continue traversal', data: 'A -> B -> [C] -> D' },
-            { action: 'Move to D', explanation: 'Reach last node', data: 'A -> B -> C -> [D]' }
-          ]
-        }
-      ];
-      
-      const [selectedTopic, setSelectedTopic] = useState(topics[0]);
-      const [stepIndex, setStepIndex] = useState(0);
-      const [isPlaying, setIsPlaying] = useState(false);
-      
-      useEffect(() => {
-        if (!isPlaying) return;
-        const timer = setTimeout(() => {
-          if (stepIndex < selectedTopic.steps.length - 1) {
-            setStepIndex(stepIndex + 1);
-          } else {
-            setIsPlaying(false);
-          }
-        }, 1500);
-        return () => clearTimeout(timer);
-      }, [isPlaying, stepIndex, selectedTopic.steps.length]);
-      
-      const currentStep = selectedTopic.steps[stepIndex];
-      const progress = ((stepIndex + 1) / selectedTopic.steps.length) * 100;
-      
-      return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-blue-100 p-6">
-          <h1 className="text-4xl font-bold text-center text-indigo-700 mb-8">🎯 DSA Master Visualizer</h1>
+  <div id="app" class="min-h-screen bg-gradient-to-br from-indigo-100 to-blue-100 p-6"></div>
+  <script>
+    const topics = [
+      {
+        id: 1,
+        title: 'Bubble Sort',
+        description: 'Array: [5, 1, 4, 2, 8]',
+        steps: [
+          { action: 'Start', explanation: 'Initial array', data: [5, 1, 4, 2, 8] },
+          { action: 'Swap 5 & 1', explanation: 'Compare 5 and 1, swap', data: [1, 5, 4, 2, 8] },
+          { action: 'Swap 5 & 4', explanation: 'Compare 5 and 4, swap', data: [1, 4, 5, 2, 8] },
+          { action: 'Swap 5 & 2', explanation: 'Compare 5 and 2, swap', data: [1, 4, 2, 5, 8] },
+          { action: 'No Swap 5 & 8', explanation: '5 < 8, no swap', data: [1, 4, 2, 5, 8] },
+          { action: 'Second Pass Complete', explanation: 'Reorder smaller elements', data: [1, 2, 4, 5, 8] },
+          { action: 'Sorted!', explanation: 'Array is now sorted', data: [1, 2, 4, 5, 8] }
+        ]
+      },
+      {
+        id: 2,
+        title: 'Linked List Traversal',
+        description: 'A -> B -> C -> D',
+        steps: [
+          { action: 'Start at A', explanation: 'Initialize pointer to head', data: 'A -> B -> C -> D' },
+          { action: 'Visit Node A', explanation: 'Current: A', data: '[A] -> B -> C -> D' },
+          { action: 'Move to B', explanation: 'Follow next pointer', data: 'A -> [B] -> C -> D' },
+          { action: 'Move to C', explanation: 'Continue traversal', data: 'A -> B -> [C] -> D' },
+          { action: 'Move to D', explanation: 'Last node', data: 'A -> B -> C -> [D]' }
+        ]
+      }
+    ];
+
+    let state = {
+      selectedTopicId: 1,
+      stepIndex: 0,
+      isPlaying: false
+    };
+
+    function getSelectedTopic() {
+      return topics.find(t => t.id === state.selectedTopicId);
+    }
+
+    function render() {
+      const topic = getSelectedTopic();
+      const step = topic.steps[state.stepIndex];
+      const progress = ((state.stepIndex + 1) / topic.steps.length) * 100;
+
+      document.getElementById('app').innerHTML = `
+        <div class="max-w-6xl mx-auto">
+          <h1 class="text-4xl font-bold text-center text-indigo-700 mb-8">🎯 DSA Master Visualizer</h1>
           
-          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6">
-            {/* Sidebar */}
-            <div className="lg:col-span-1 bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">Topics</h2>
-              <div className="space-y-2">
-                {topics.map(t => (
-                  <button
-                    key={t.id}
-                    onClick={() => {
-                      setSelectedTopic(t);
-                      setStepIndex(0);
-                      setIsPlaying(false);
-                    }}
-                    className={`w-full p-3 rounded-lg text-left font-semibold transition ${
-                      selectedTopic.id === t.id
-                        ? 'bg-indigo-500 text-white'
+          <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <!-- Sidebar -->
+            <div class="lg:col-span-1 bg-white rounded-lg shadow-lg p-6">
+              <h2 class="text-2xl font-bold text-gray-800 mb-4">Topics</h2>
+              <div class="space-y-2">
+                ${topics.map(t => `
+                  <button onclick="selectTopic(${t.id})" 
+                    class="w-full p-3 rounded-lg text-left font-semibold transition ${
+                      state.selectedTopicId === t.id 
+                        ? 'bg-indigo-500 text-white' 
                         : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-                    }`}
-                  >
-                    {t.title}
+                    }">
+                    ${t.title}
                   </button>
-                ))}
+                `).join('')}
               </div>
             </div>
             
-            {/* Main Content */}
-            <div className="lg:col-span-3 space-y-6">
-              {/* Visualization */}
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <h2 className="text-3xl font-bold text-indigo-600 mb-2">{selectedTopic.title}</h2>
-                <p className="text-gray-600 mb-6">{selectedTopic.description}</p>
+            <!-- Main Content -->
+            <div class="lg:col-span-3 space-y-6">
+              <!-- Visualization -->
+              <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-3xl font-bold text-indigo-600 mb-2">${topic.title}</h2>
+                <p class="text-gray-600 mb-6">${topic.description}</p>
                 
-                {/* Data visualization */}
-                <div className="bg-indigo-50 rounded-lg p-6 h-40 flex items-center justify-center">
-                  {Array.isArray(currentStep.data) ? (
-                    <div className="flex gap-2 items-end h-full">
-                      {currentStep.data.map((val, i) => (
-                        <div key={i} className="flex flex-col items-center">
-                          <div
-                            className="bg-indigo-500 rounded-t transition-all duration-300"
-                            style={{width: '40px', height: val * 15 + 'px'}}
-                          />
-                          <span className="text-xs font-bold mt-1">{val}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-lg font-mono text-center">{currentStep.data}</div>
-                  )}
+                <!-- Data Display -->
+                <div class="bg-indigo-50 rounded-lg p-6 h-40 flex items-center justify-center">
+                  ${Array.isArray(step.data) 
+                    ? `<div class="flex gap-2 items-end h-full">
+                        ${step.data.map(v => `
+                          <div class="flex flex-col items-center">
+                            <div class="bar bg-indigo-500 rounded-t" style="width: 40px; height: ${v * 15}px"></div>
+                            <span class="text-xs font-bold mt-1">${v}</span>
+                          </div>
+                        `).join('')}
+                      </div>`
+                    : `<div class="text-lg font-mono text-center">${step.data}</div>`
+                  }
                 </div>
               </div>
               
-              {/* Controls */}
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <div className="flex justify-center gap-4 mb-6">
-                  <button
-                    onClick={() => setStepIndex(Math.max(0, stepIndex - 1))}
-                    disabled={stepIndex === 0}
-                    className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg disabled:opacity-50 font-semibold"
-                  >
+              <!-- Controls -->
+              <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex justify-center gap-4 mb-6">
+                  <button onclick="prevStep()" ${state.stepIndex === 0 ? 'disabled' : ''}
+                    class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg disabled:opacity-50 font-semibold hover:bg-gray-400">
                     ← Previous
                   </button>
                   
-                  <button
-                    onClick={() => setIsPlaying(!isPlaying)}
-                    disabled={stepIndex === selectedTopic.steps.length - 1}
-                    className={`px-8 py-2 rounded-lg text-white font-bold ${isPlaying ? 'bg-red-500 hover:bg-red-600' : 'bg-indigo-500 hover:bg-indigo-600'}`}
-                  >
-                    {isPlaying ? '⏸ Pause' : '▶ Play'}
+                  <button onclick="togglePlay()" ${state.stepIndex === topic.steps.length - 1 && !state.isPlaying ? 'disabled' : ''}
+                    class="px-8 py-2 rounded-lg text-white font-bold ${state.isPlaying ? 'bg-red-500 hover:bg-red-600' : 'bg-indigo-500 hover:bg-indigo-600'} disabled:opacity-50">
+                    ${state.isPlaying ? '⏸ Pause' : '▶ Play'}
                   </button>
                   
-                  <button
-                    onClick={() => setStepIndex(Math.min(stepIndex + 1, selectedTopic.steps.length - 1))}
-                    disabled={stepIndex === selectedTopic.steps.length - 1}
-                    className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg disabled:opacity-50 font-semibold"
-                  >
+                  <button onclick="nextStep()" ${state.stepIndex === topic.steps.length - 1 ? 'disabled' : ''}
+                    class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg disabled:opacity-50 font-semibold hover:bg-gray-400">
                     Next →
                   </button>
                 </div>
                 
-                {/* Progress bar */}
-                <div className="w-full bg-gray-300 rounded-full h-3 mb-6">
-                  <div
-                    className="bg-indigo-600 h-3 rounded-full transition-all duration-500"
-                    style={{width: progress + '%'}}
-                  />
+                <!-- Progress Bar -->
+                <div class="w-full bg-gray-300 rounded-full h-3 mb-6">
+                  <div class="bg-indigo-600 h-3 rounded-full" style="width: ${progress}%"></div>
                 </div>
                 
-                {/* Step info */}
-                <div className="bg-indigo-50 border-2 border-indigo-300 rounded-lg p-4">
-                  <p className="text-lg font-bold text-indigo-700 mb-2">
-                    Step {stepIndex + 1} of {selectedTopic.steps.length}: {currentStep.action}
+                <!-- Step Info -->
+                <div class="bg-indigo-50 border-2 border-indigo-300 rounded-lg p-4">
+                  <p class="text-lg font-bold text-indigo-700 mb-2">
+                    Step ${state.stepIndex + 1}/${topic.steps.length}: ${step.action}
                   </p>
-                  <p className="text-gray-700">{currentStep.explanation}</p>
+                  <p class="text-gray-700">${step.explanation}</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      );
+      `;
     }
-    
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
+
+    function selectTopic(id) {
+      state.selectedTopicId = id;
+      state.stepIndex = 0;
+      state.isPlaying = false;
+      render();
+    }
+
+    function nextStep() {
+      const topic = getSelectedTopic();
+      if (state.stepIndex < topic.steps.length - 1) {
+        state.stepIndex++;
+        render();
+      }
+    }
+
+    function prevStep() {
+      if (state.stepIndex > 0) {
+        state.stepIndex--;
+        render();
+      }
+    }
+
+    function togglePlay() {
+      state.isPlaying = !state.isPlaying;
+      render();
+      
+      if (state.isPlaying) {
+        const interval = setInterval(() => {
+          const topic = getSelectedTopic();
+          if (state.stepIndex < topic.steps.length - 1 && state.isPlaying) {
+            state.stepIndex++;
+            render();
+          } else {
+            state.isPlaying = false;
+            clearInterval(interval);
+            render();
+          }
+        }, 1500);
+      }
+    }
+
+    render();
   </script>
 </body>
 </html>
